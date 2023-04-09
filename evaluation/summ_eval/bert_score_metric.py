@@ -50,7 +50,7 @@ class BertScoreMetric(Metric):
         assert not self.idf, "idf mode not supported for evaluating a single example"
         if isinstance(reference, str):
             reference = [reference]
-        all_preds, hash_code = self.scroer.score(
+        all_preds, hash_code = self.scorer.score(
             [summary], reference, return_hash=True)
         print(f"hash_code: {hash_code}")
         score = {"bert_score_precision": all_preds[0].cpu().item(), "bert_score_recall": all_preds[1].cpu().item(), "bert_score_f1":
