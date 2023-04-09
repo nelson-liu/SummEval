@@ -52,7 +52,8 @@ class BertScoreMetric(Metric):
             reference = [reference]
         all_preds, hash_code = self.scorer.score(
             [summary], reference, return_hash=True)
-        print(f"hash_code: {hash_code}")
+        if self.verbose:
+            print(f"hash_code: {hash_code}")
         score = {"bert_score_precision": all_preds[0].cpu().item(), "bert_score_recall": all_preds[1].cpu().item(), "bert_score_f1":
                 all_preds[2].cpu().item()}
         return score
