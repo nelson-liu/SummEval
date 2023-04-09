@@ -36,16 +36,22 @@ class BertScoreMetric(Metric):
         self.nthreads = nthreads
         self.batch_size = batch_size
         self.rescale_with_baseline = rescale_with_baseline
+        self.scorer = bert_score.BERTScorer(
+            model_type=self.model_type,
+            num_layers=self.num_layers,
+            idf=self.idf,
+            batch_size=self.batch_size,
+            nthreads=self.nthreads,
+            lang=self.lang,
+            rescale_with_baseline=self.rescale_with_baseline
+        )
 
     def evaluate_example(self, summary, reference):
         assert not self.idf, "idf mode not supported for evaluating a single example"
         if isinstance(reference, str):
             reference = [reference]
-        all_preds, hash_code = bert_score.score([summary], reference, model_type=self.model_type, \
-                                                num_layers=self.num_layers,
-                                                verbose=self.verbose, idf=self.idf, batch_size=self.batch_size,
-                                                nthreads=self.nthreads, lang=self.lang, return_hash=True,
-                                                rescale_with_baseline=self.rescale_with_baseline)
+        all_preds, hash_code = self.scroer.score(
+            [summary], reference, return_hash=True)
         print(f"hash_code: {hash_code}")
         score = {"bert_score_precision": all_preds[0].cpu().item(), "bert_score_recall": all_preds[1].cpu().item(), "bert_score_f1":
                 all_preds[2].cpu().item()}
