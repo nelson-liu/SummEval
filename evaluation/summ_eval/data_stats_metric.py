@@ -49,9 +49,9 @@ class DataStatsMetric(Metric):
     def evaluate_example(self, summary, input_text):
         if self.tokenize:
             input_text = _en(input_text, disable=["tagger", "parser", "ner", "textcat"])
-            input_text = [tok.text.strip() for tok in input_text]
+            input_text = [tok.text.strip() for tok in input_text if tok.text.strip()]
             summary = _en(summary, disable=["tagger", "parser", "ner", "textcat"])
-            summary = [tok.text.strip() for tok in summary]
+            summary = [tok.text.strip() for tok in summary if tok.text.strip()]
         fragments = Fragments(summary, input_text, case=self.case)
         coverage = fragments.coverage()
         density = fragments.density()
